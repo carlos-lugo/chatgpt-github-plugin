@@ -1,18 +1,28 @@
 {
-  "name": "github-api",
+  "name": "templateforv2-static",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js",
+    "build": "echo This is a static template, there is no bundler or bundling involved!"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codesandbox-app/static-template.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ives van Hoorne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codesandbox-app/static-template/issues"
+  },
+  "homepage": "https://github.com/codesandbox-app/static-template#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "axios": "^1.4.0",
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7",
+    "nodemon": "^2.0.20",
+    "swagger-ui-express": "^4.1.6",
     "swagger-parser": "^10.0.3"
   }
 }

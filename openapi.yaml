@@ -4,7 +4,7 @@ info:
   description: "This API provides methods to fetch user repositories and file contents from GitHub using the GitHub API."
   version: "1.0.0"
 servers:
-  - url: "https://sdbquq-3000.csb.app"
+  - url: "https://79inid4928.execute-api.ap-northeast-1.amazonaws.com"
 paths:
   /:
     get:

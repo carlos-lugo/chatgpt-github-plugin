@@ -5,6 +5,17 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerParser = require("swagger-parser");
 const app = express();
 
+let axiosInstance;
+if (process.env.GITHUB_TOKEN) {
+  axiosInstance = axios.create({
+    headers: {
+      'Authorization': `token ${process.env.GITHUB_TOKEN}`
+    }
+  });
+} else {
+  axiosInstance = axios.create();
+}
+
 // Middleware to parse the OpenAPI specification
 app.use("/api-docs", async (req, res, next) => {
     try {
@@ -36,15 +47,21 @@ app.get("/", (req, res) => {
 
 app.get("/repositories/:username", (req, res) => {
     const username = req.params.username;
-    axios
+    axiosInstance
       .get(`https://api.github.com/users/${username}/repos`)
       .then((response) => {
         const repositories = response.data.map((repo) => repo.name);
         res.json(repositories);
       })
       .catch((error) => {
-        console.error(error.response.data);
-        res.status(500).send("Error retrieving repositories");
+        console.error(error);
+        if (error.response && error.response.data) {
+          // Send the original error message from the GitHub API to the client
+          res.status(500).send(error.response.data);
+        } else {
+          // If there is no original error message, send a generic error message
+          res.status(500).send("Error retrieving files");
+        }
       });
 });
 
@@ -52,7 +69,7 @@ app.get("/repositories/:username/:repo/files/*", (req, res) => {
     const username = req.params.username;
     const repo = req.params.repo;
     const filePath = req.params[0];
-    axios
+    axiosInstance
       .get(
         `https://api.github.com/repos/${username}/${repo}/contents/${filePath}`
       )
@@ -64,7 +81,13 @@ app.get("/repositories/:username/:repo/files/*", (req, res) => {
       })
       .catch((error) => {
         console.error(error);
-        res.status(500).send("Error retrieving file content");
+        if (error.response && error.response.data) {
+          // Send the original error message from the GitHub API to the client
+          res.status(500).send(error.response.data);
+        } else {
+          // If there is no original error message, send a generic error message
+          res.status(500).send("Error retrieving files");
+        }
       });
 });
 
@@ -72,7 +95,7 @@ const getFiles = async (username, repo, path = "") => {
     let files = [];
 
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `https://api.github.com/repos/${username}/${repo}/contents/${path}`
       );
   
@@ -112,6 +135,28 @@ app.get("/repositories/:username/:repo/files", async (req, res) => {
   }
 });
 
+app.get("/user/repos", (req, res) => {
+  if (!process.env.GITHUB_TOKEN) {
+    return res.status(403).send("Github token not configured in AWS Lambda");
+  }
+
+  axiosInstance
+    .get("https://api.github.com/user/repos")
+    .then((response) => {
+      const repositories = response.data.map((repo) => repo.name);
+        res.json(repositories);
+    })
+    .catch((error) => {
+      console.error(error);
+      if (error.response && error.response.data) {
+        // Send the original error message from the GitHub API to the client
+        res.status(500).send(error.response.data);
+      } else {
+        // If there is no original error message, send a generic error message
+        res.status(500).send("Error retrieving repositories");
+      }
+    });
+});
 
 app.get("/.well-known/ai-plugin.json", (req, res) => {
     const pluginInfo = {

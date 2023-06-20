@@ -1,0 +1,54 @@
+Resources:
+  ChatGPTGitHubPluginFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: app.handler
+      Runtime: nodejs14.x
+      CodeUri: s3://<your-bucket-name>/chatgpt-github-plugin.zip
+      Environment:
+        Variables:
+          GITHUB_TOKEN: <your-github-token>
+      Role: <your-iam-role-arn>
+
+  ChatGPTGitHubPluginAPI:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: ChatGPTGitHubPluginAPI
+
+  ChatGPTGitHubPluginResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref ChatGPTGitHubPluginAPI
+      ParentId: !GetAtt 
+        - ChatGPTGitHubPluginAPI
+        - RootResourceId
+      PathPart: '{proxy+}'
+
+  ChatGPTGitHubPluginMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref ChatGPTGitHubPluginAPI
+      ResourceId: !Ref ChatGPTGitHubPluginResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub 
+          - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChatGPTGitHubPluginFunction.Arn}/invocations'
+          - AWS::Region: !Ref 'AWS::Region'
+            ChatGPTGitHubPluginFunction: !GetAtt ChatGPTGitHubPluginFunction.Arn
+
+  ChatGPTGitHubPluginDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: ChatGPTGitHubPluginMethod
+    Properties:
+      RestApiId: !Ref ChatGPTGitHubPluginAPI
+
+Outputs:
+  ApiUrl:
+    Value: !Sub 
+      - 'https://${ChatGPTGitHubPluginAPI}.execute-api.${AWS::Region}.amazonaws.com/${ChatGPTGitHubPluginDeployment}'
+      - ChatGPTGitHubPluginAPI: !Ref ChatGPTGitHubPluginAPI
+        AWS::Region: !Ref 'AWS::Region'
+        ChatGPTGitHubPluginDeployment: !Ref ChatGPTGitHubPluginDeployment

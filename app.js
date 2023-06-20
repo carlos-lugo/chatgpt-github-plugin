@@ -94,17 +94,24 @@ const getFiles = async (username, repo, path = "") => {
 };
 
 app.get("/repositories/:username/:repo/files", async (req, res) => {
-    const username = req.params.username;
-    const repo = req.params.repo;
-  
-    try {
-      const files = await getFiles(username, repo);
-      res.json(files);
-    } catch (error) {
-      console.error(error);
+  const username = req.params.username;
+  const repo = req.params.repo;
+
+  try {
+    const files = await getFiles(username, repo);
+    res.json(files);
+  } catch (error) {
+    console.error(error);
+    if (error.response && error.response.data) {
+      // Send the original error message from the GitHub API to the client
+      res.status(500).send(error.response.data);
+    } else {
+      // If there is no original error message, send a generic error message
       res.status(500).send("Error retrieving files");
     }
+  }
 });
+
 
 app.get("/.well-known/ai-plugin.json", (req, res) => {
     const pluginInfo = {

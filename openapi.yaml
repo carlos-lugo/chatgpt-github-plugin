@@ -172,3 +172,106 @@ paths:
                     type: "string"
                   legal_info_url:
                     type: "string"
+  /repositories/{username}/{repo}/branches:
+    get:
+      summary: "Get a list of repository branches"
+      operationId: getRepositoryBranches
+      parameters:
+        - name: "username"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "repo"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "500":
+          description: "Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /repositories/{username}/{repo}/branches/{branch}/files:
+    get:
+      summary: "Get a list of files in a specific branch of a repository"
+      operationId: getBranchFiles
+      parameters:
+        - name: "username"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "repo"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "branch"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "500":
+          description: "Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /repositories/{username}/{repo}/branches/{branch}/files/{filepath}:
+    get:
+      summary: "Get content of a specific file in a specific branch of a repository"
+      operationId: getBranchFileContent
+      parameters:
+        - name: "username"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "repo"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "branch"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "filepath"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "500":
+          description: "Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"

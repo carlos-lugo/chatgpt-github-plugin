@@ -158,6 +158,78 @@ app.get("/user/repos", (req, res) => {
     });
 });
 
+app.get("/repositories/:username/:repo/branches", (req, res) => {
+  const username = req.params.username;
+  const repo = req.params.repo;
+  axiosInstance
+    .get(`https://api.github.com/repos/${username}/${repo}/branches`)
+    .then((response) => {
+      const branches = response.data.map((branch) => branch.name);
+      res.json(branches);
+    })
+    .catch((error) => {
+      console.error(error);
+      if (error.response && error.response.data) {
+        // Send the original error message from the GitHub API to the client
+        res.status(500).send(error.response.data);
+      } else {
+        // If there is no original error message, send a generic error message
+        res.status(500).send("Error retrieving branches");
+      }
+    });
+});
+
+app.get("/repositories/:username/:repo/branches/:branch/files", async (req, res) => {
+  const username = req.params.username;
+  const repo = req.params.repo;
+  const branch = req.params.branch;
+
+  try {
+    const response = await axiosInstance.get(
+      `https://api.github.com/repos/${username}/${repo}/git/trees/${branch}?recursive=1`
+    );
+    const files = response.data.tree.map((file) => file.path);
+    res.json(files);
+  } catch (error) {
+    console.error(error);
+    if (error.response && error.response.data) {
+      // Send the original error message from the GitHub API to the client
+      res.status(500).send(error.response.data);
+    } else {
+      // If there is no original error message, send a generic error message
+      res.status(500).send("Error retrieving files");
+    }
+  }
+});
+
+app.get("/repositories/:username/:repo/branches/:branch/files/:filepath", (req, res) => {
+  const username = req.params.username;
+  const repo = req.params.repo;
+  const branch = req.params.branch;
+  const filepath = req.params.filepath;
+
+  axiosInstance
+    .get(
+      `https://api.github.com/repos/${username}/${repo}/contents/${filepath}?ref=${branch}`
+    )
+    .then((response) => {
+      const content = Buffer.from(response.data.content, "base64").toString(
+        "utf-8"
+      );
+      res.send(content);
+    })
+    .catch((error) => {
+      console.error(error);
+      if (error.response && error.response.data) {
+        // Send the original error message from the GitHub API to the client
+        res.status(500).send(error.response.data);
+      } else {
+        // If there is no original error message, send a generic error message
+        res.status(500).send("Error retrieving file");
+      }
+    });
+});
+
 app.get("/.well-known/ai-plugin.json", (req, res) => {
     const pluginInfo = {
         schema_version: "v1",

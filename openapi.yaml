@@ -110,26 +110,26 @@ paths:
       summary: "Get User repositories (public and private)"
       operationId: getUserPrivateRepos
       responses:
-      "200":
-        description: "Success"
-        content:
-          application/json:
-            schema:
-              type: "array"
-              items:
-                type: "object"
-      "403":
-        description: "GitHub token not configured in AWS Lambda"
-        content:
-          text/plain:
-            schema:
-              type: "string"
-      "500":
-        description: "Error"
-        content:
-          text/plain:
-            schema:
-              type: "string"
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+        "403":
+          description: "GitHub token not configured in AWS Lambda"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "500":
+          description: "Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
   /.well-known/manifest.json:
     get:
       summary: "Get plugin information"

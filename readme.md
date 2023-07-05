@@ -67,34 +67,33 @@ Here are the steps to deploy this plugin on AWS Lambda and API Gateway:
 
 11. **Connect the API Gateway to the Lambda function**
 
-   Now, go back to your API Gateway and set up the route to connect to your Lambda function.
+    Now, go back to your API Gateway and set up the route to connect to your Lambda function.
+    
+    In the API Gateway console, select your API. Then, go to the "Routes" section. Here, you will define the routes for your API. 
 
-   In the API Gateway console, select your API. Then, go to the "Routes" section. Here, you will define the routes for your API. 
+    You'll want to create a catch-all route that will forward all requests to your Lambda function. To do this, click on "Create" and in the "Create Route" popup, enter `/{proxy+}` in the "Route" field. This creates a route that matches any path.
 
-   You'll want to create a catch-all route that will forward all requests to your Lambda function. To do this, click on "Create" and in the "Create Route" popup, enter `/{proxy+}` in the "Route" field. This creates a route that matches any path.
+    For the "Integration target", select your Lambda function. This tells API Gateway to send requests to your Lambda function. 
 
-   For the "Integration target", select your Lambda function. This tells API Gateway to send requests to your Lambda function. 
+    Make sure to select "ANY" as the method. This allows the route to match requests of any HTTP method (GET, POST, PUT, etc.).
 
-   Make sure to select "ANY" as the method. This allows the route to match requests of any HTTP method (GET, POST, PUT, etc.).
-
-12. **Install the Plugin in ChatGPT**
-
-    After deploying your API, you can now install the plugin in ChatGPT.
-
-    - Look for the "Plugins" section and click on "Add Plugin".
-    - You will be asked to provide the API endpoint. This is the Invoke URL of the API Gateway you deployed earlier.
-    - The plugin will be automatically installed and you can now use it in your conversations with ChatGPT.
-
+12. **Install the Unverified Plugin in ChatGPT**
+   
+    After deploying your API, you can now install the plugin in ChatGPT as an unverified plugin.
+   
+    Look for the "Plugins" section and click on "Add Unverified Plugin".
+    You will be asked to provide the API endpoint. This is the Invoke URL of the API Gateway you deployed earlier.
+    The plugin will be automatically installed and you can now use it in your conversations with ChatGPT.
     Please note that the exact steps may vary depending on the interface provided by OpenAI for ChatGPT. The key point is to provide the API endpoint (the Invoke URL from API Gateway) when adding the plugin.
 
 # **⚠️ Warning**
 
 Do not share your API endpoint (Invoke URL): This URL is the entry point to your backend service. Sharing this URL publicly could expose your service to potential security risks and costs:
 
-  - Unauthorized Access: If your API endpoint is public, anyone can make requests to it. This could lead to unauthorized access to any data or functionality that your API provides. If your API interacts with other services (like GitHub in this case), unauthorized users could potentially access or manipulate that data.
-  - Rate Limiting: Most APIs have some form of rate limiting to prevent abuse. If your API endpoint is public, it could be hit with a large number of requests, potentially leading to your legitimate requests being rate-limited or even blocked.
-  - Resource Exhaustion: Each request to your API consumes some amount of resources (CPU, memory, etc.). A large number of requests could exhaust your resources, leading to degraded performance or even downtime.
-  - Costs: If you're using a cloud provider like AWS, you're charged based on the number of requests and the amount of compute time used. Unauthorized and massive use of your API could lead to unexpected costs of potentially thousand of dollars
-  - Be cautious with your GitHub token: If you use a GitHub token, it will have the same permissions as your GitHub account. Be careful not to expose this token as it could lead to unauthorized access to your GitHub account. Always store sensitive information like this in secure and encrypted storage.
+   - Unauthorized Access: If your API endpoint is public, anyone can make requests to it. This could lead to unauthorized access to any data or functionality that your API provides. If your API interacts with other services (like GitHub in this case), unauthorized users could potentially access or manipulate that data.
+   - Rate Limiting: Most APIs have some form of rate limiting to prevent abuse. If your API endpoint is public, it could be hit with a large number of requests, potentially leading to your legitimate requests being rate-limited or even blocked.
+   - Resource Exhaustion: Each request to your API consumes some amount of resources (CPU, memory, etc.). A large number of requests could exhaust your resources, leading to degraded performance or even downtime.
+   - Costs: If you're using a cloud provider like AWS, you're charged based on the number of requests and the amount of compute time used. Unauthorized and massive use of your API could lead to unexpected costs of potentially thousand of dollars
+   - Be cautious with your GitHub token: If you use a GitHub token, it will have the same permissions as your GitHub account. Be careful not to expose this token as it could lead to unauthorized access to your GitHub account. Always store sensitive information like this in secure and encrypted storage.
 
 And that's it! Your ChatGPT GitHub plugin is now deployed on AWS Lambda and API Gateway. You can now use this API to interact with the GitHub API through ChatGPT.

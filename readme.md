@@ -14,12 +14,6 @@ Here are the steps to deploy this plugin on AWS Lambda and API Gateway:
    git clone https://github.com/carlos-lugo/chatgpt-github-plugin.git
    ```
 
-   Then, switch to the `aws-manual-deploy` branch:
-
-   ```
-   git checkout aws-manual-deploy
-   ```
-
 2. **Install dependencies**
 
    Navigate to the cloned repository and install the necessary dependencies with:
@@ -56,12 +50,37 @@ Here are the steps to deploy this plugin on AWS Lambda and API Gateway:
 
    In the AWS Management Console, go to the API Gateway service and create a new HTTP API. 
 
+
 9. **Connect the API Gateway to the Lambda function**
 
-   In the routes section of your API, create a new route for each endpoint in your application. Set the integration target to the ARN of your Lambda function.
+   In the API Gateway console, select your API. Then, go to the "Routes" section. Here, you will define the routes for your API. 
+
+   You'll want to create a catch-all route that will forward all requests to your Lambda function. To do this, click on "Create" and in the "Create Route" popup, enter `/{proxy+}` in the "Route" field. This creates a route that matches any path.
+
+   For the "Integration target", select your Lambda function. This tells API Gateway to send requests to your Lambda function. 
+
+   Make sure to select "ANY" as the method. This allows the route to match requests of any HTTP method (GET, POST, PUT, etc.).
 
 10. **Deploy the API**
 
-    Finally, you need to deploy your API. In the deployments section of your API, create a new deployment. Once the deployment is complete, you will be given a URL for your API.
+   After setting up your routes and integrations, you need to deploy your API to make it publicly accessible.
+
+   In the API Gateway console, select "Deployments" from the left navigation menu. Click on "Create Deployment". 
+
+   You'll be asked to select a "Stage". Stages are like environments (e.g., dev, test, prod). If you don't have a stage yet, create a new one, you might call it `prod` for production or `dev` for development.
+
+   After you click "Create", your API is deployed and you're given an Invoke URL. This is the base URL of your API. You can now make requests to any of your routes by appending the route's path to this base URL.
+
+   For example, if your Invoke URL is `https://abc123.execute-api.us-east-1.amazonaws.com/prod` and you have a route for `/{proxy+}`, you can access the function by making requests to `https://abc123.execute-api.us-east-1.amazonaws.com/prod/your-route-here`.
+
+11. **Install the Plugin in ChatGPT**
+
+   After deploying your API, you can now install the plugin in ChatGPT.
+
+   - Look for the "Plugins" section and click on "Add Plugin".
+   - You will be asked to provide the API endpoint. This is the Invoke URL of the API Gateway you deployed earlier.
+   - The plugin will be automatically installed and you can now use it in your conversations with ChatGPT.
+
+   Please note that the exact steps may vary depending on the interface provided by OpenAI for ChatGPT. The key point is to provide the API endpoint (the Invoke URL from API Gateway) when adding the plugin.
 
 And that's it! Your ChatGPT GitHub plugin is now deployed on AWS Lambda and API Gateway. You can now use this API to interact with the GitHub API through ChatGPT.

@@ -81,7 +81,7 @@ Here are the steps to deploy this plugin on AWS Lambda and API Gateway:
    
     After deploying your API, you can now install the plugin in ChatGPT as an unverified plugin.
    
-    Look for the "Plugins" section and click on "Add Unverified Plugin".
+    Look for the "Plugins" section and click on "Develop your own plugin".
     You will be asked to provide the API endpoint. This is the Invoke URL of the API Gateway you deployed earlier.
     The plugin will be automatically installed and you can now use it in your conversations with ChatGPT.
     Please note that the exact steps may vary depending on the interface provided by OpenAI for ChatGPT. The key point is to provide the API endpoint (the Invoke URL from API Gateway) when adding the plugin.

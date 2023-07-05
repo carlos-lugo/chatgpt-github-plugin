@@ -244,11 +244,11 @@ app.get("/.well-known/ai-plugin.json", (req, res) => {
         },
         api: {
             type: "openapi",
-            url: "https://79inid4928.execute-api.ap-northeast-1.amazonaws.com/openapi.yaml",
+            url: "<your_AWS_API_Gateway_URL>/openapi.yaml",
             is_user_authenticated: false,
         },
         logo_url:
-            "https://img.favpng.com/15/4/18/budgerigar-bird-parrot-parakeet-clip-art-png-favpng-3ehJdY4H8aPTKiDvvpqY4sNRW.jpg",
+            "<any_image_url_suggested_size_512x512>",
         contact_email: "support@example.com",
         legal_info_url: "http://www.example.com/legal",
     };

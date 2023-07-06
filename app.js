@@ -208,11 +208,13 @@ app.get("/repositories/:username/:repo/branches/*/files", async (req, res) => {
   }
 });
 
-app.get("/repositories/:username/:repo/branches/:branch/files/:filepath", (req, res) => {
+app.get("/repositories/:username/:repo/contents", (req, res) => {
   const username = req.params.username;
   const repo = req.params.repo;
-  const branch = req.params.branch;
-  const filepath = req.params.filepath;
+  const filepath = req.query.filepath;  // Get the filepath from the query string
+  const branch = req.query.branch;  // Get the branch from the query string
+
+  const url = `https://api.github.com/repos/${username}/${repo}/contents/${filepath}?ref=${branch}`;
 
   axiosInstance
     .get(

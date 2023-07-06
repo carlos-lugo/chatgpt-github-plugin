@@ -42,7 +42,7 @@ paths:
             text/plain:
               schema:
                 type: "string"
-  /repositories/{username}/{repo}/{filename}:
+  /repositories/{username}/{repo}/files/{filename}:
     get:
       summary: "Get specific file content"
       operationId: getFileContent

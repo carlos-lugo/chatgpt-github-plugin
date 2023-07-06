@@ -42,7 +42,7 @@ paths:
             text/plain:
               schema:
                 type: "string"
-  /repositories/{username}/{repo}/files/{filename}:
+  /repositories/{username}/{repo}/{filename}:
     get:
       summary: "Get specific file content"
       operationId: getFileContent
@@ -237,7 +237,7 @@ paths:
             text/plain:
               schema:
                 type: "string"
-  /repositories/{username}/{repo}/branches/{branch}/files/{filepath}:
+  /repositories/{username}/{repo}/contents:
     get:
       summary: "Get content of a specific file in a specific branch of a repository"
       operationId: getBranchFileContent
@@ -252,13 +252,13 @@ paths:
           required: true
           schema:
             type: "string"
-        - name: "branch"
-          in: "path"
+        - name: "filepath"
+          in: "query"
           required: true
           schema:
             type: "string"
-        - name: "filepath"
-          in: "path"
+        - name: "branch"
+          in: "query"
           required: true
           schema:
             type: "string"
@@ -266,12 +266,22 @@ paths:
         "200":
           description: "Success"
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
+                type: "object"
+                properties:
+                  content:
+                    type: "string"
+                  url:
+                    type: "string"
         "500":
           description: "Error"
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                  url:
+                    type: "string"

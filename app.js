@@ -179,25 +179,31 @@ app.get("/repositories/:username/:repo/branches", (req, res) => {
     });
 });
 
-app.get("/repositories/:username/:repo/branches/:branch/files", async (req, res) => {
+app.get("/repositories/:username/:repo/branches/*/files", async (req, res) => {
   const username = req.params.username;
   const repo = req.params.repo;
-  const branch = req.params.branch;
+  const branch = req.params[0];  // Access the branch parameter
+
+  const url = `https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`;
 
   try {
-    const response = await axiosInstance.get(
-      `https://api.github.com/repos/${username}/${repo}/git/trees/${branch}?recursive=1`
-    );
-    const files = response.data.tree.map((file) => file.path);
-    res.json(files);
+    // Get the branch reference
+    const refResponse = await axiosInstance.get(url);
+    const treeSha = refResponse.data.object.sha;
+
+    // Get the tree
+    const treeUrl = `https://api.github.com/repos/${username}/${repo}/git/trees/${treeSha}?recursive=1`;
+    const treeResponse = await axiosInstance.get(treeUrl);
+    const files = treeResponse.data.tree.map((file) => file.path);
+    res.json({files, url, treeUrl});
   } catch (error) {
     console.error(error);
     if (error.response && error.response.data) {
       // Send the original error message from the GitHub API to the client
-      res.status(500).send(error.response.data);
+      res.status(500).send({message: error.response.data, url});
     } else {
       // If there is no original error message, send a generic error message
-      res.status(500).send("Error retrieving files");
+      res.status(500).send({message: "Error retrieving files", url});
     }
   }
 });

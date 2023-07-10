@@ -1,6 +1,7 @@
 # GitHub Plugin for ChatGPT - AWS Manual Deploy
 
 This repository contains a plugin for ChatGPT that interacts with the GitHub API. It can fetch information about GitHub repositories, including the list of repositories, branch and files in a repository, and the content of a specific file.
+Optionally, you can setup a Github token from your own account, to fetch info from your private repositories. This step is optional and not required.
 
 ## Installation
 

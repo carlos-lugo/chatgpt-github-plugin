@@ -238,7 +238,7 @@ app.get("/repositories/:username/:repo/contents", (req, res) => {
     });
 });
 
-app.get("/.well-known/ai-plugin.json", (req, res) => {
+app.get("/.well-known/manifest.json", (req, res) => {
     const pluginInfo = {
         schema_version: "v1",
         name_for_human: "GitHub plugin",
